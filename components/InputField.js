@@ -1,38 +1,48 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { Button, Modal, StyleSheet, TextInput, View } from 'react-native';
 
-export default function InputField({ setStorePlans }) {
+export default function InputField({
+	visible,
+	addPlanHandler,
+	cancelShowModal,
+}) {
 	const [plan, setPlan] = useState('');
 
 	const handlePlan = (enteredText) => {
 		setPlan(enteredText);
 	};
 
-	const addPlanHandler = () => {
-		setStorePlans((currentPlan) => [
-			...currentPlan,
-			{ id: Math.random().toString(), value: plan },
-		]);
+	const handleAddPlan = () => {
+		addPlanHandler(plan);
 		setPlan('');
 	};
 
 	return (
-		<View style={styles.inputConatiner}>
-			<TextInput
-				placeholder='Your plan'
-				style={styles.input}
-				onChangeText={handlePlan}
-				value={plan}
-			/>
-			<Button title='ADD' onPress={addPlanHandler} />
-		</View>
+		<Modal visible={visible} animationType='slide'>
+			<View style={styles.inputConatiner}>
+				<TextInput
+					placeholder='Your plan'
+					style={styles.input}
+					onChangeText={handlePlan}
+					value={plan}
+				/>
+				<View style={styles.buttonContainer}>
+					<View style={styles.button}>
+						<Button title='CANCEL' color='red' onPress={cancelShowModal} />
+					</View>
+					<View style={styles.button}>
+						<Button title='ADD' onPress={handleAddPlan} />
+					</View>
+				</View>
+			</View>
+		</Modal>
 	);
 }
 
 const styles = StyleSheet.create({
 	inputConatiner: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
+		flex: 1,
+		justifyContent: 'center',
 		alignItems: 'center',
 	},
 
@@ -41,5 +51,16 @@ const styles = StyleSheet.create({
 		borderBottomColor: '#ccc',
 		borderBottomWidth: 1,
 		padding: 10,
+		marginBottom: 10,
+	},
+
+	buttonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		width: '60%',
+	},
+
+	button: {
+		width: '40%',
 	},
 });
